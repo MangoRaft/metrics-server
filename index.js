@@ -3,4 +3,4 @@
  *
  */
 
-module.exports = require('./lib/route-machine/router')
+module.exports = require('./lib/route-machine/router');
