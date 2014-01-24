@@ -1,5 +1,9 @@
 /**
- * Raft Nodev
+ * Raft
+ * 
+ * route-machine
+ * 
+ * HTTP/WS router.
  *
  */
 
