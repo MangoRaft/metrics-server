@@ -4,7 +4,7 @@
 
 Route Machine is a HTTP router built to run in a cluster environment. Using the NATS network to update routes in real-time.
 
-Route Machine has been built for the use with the Raft framework. The events Route Machine emitts are watched by the 
+Route Machine has been built for the uses with the Raft framework. The events Route Machine emits are watched by the Dea.
 
 ## Features
 
