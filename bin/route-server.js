@@ -7,10 +7,9 @@ var Router = require('../');
 raft.common.printLogo();
 
 raft.once('start', function() {
-var rotuer = new Router();
-rotuer.start();
+	var rotuer = new Router();
+	rotuer.start();
 });
 
-console.log(process.argv[2])
 
-raft.start(process.argv[2]||process.argv[1]);
+raft.start(process.argv[2]);
