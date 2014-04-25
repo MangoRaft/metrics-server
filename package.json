@@ -1,22 +1,22 @@
 {
-	"name": "route-machine",
-	"version": "0.0.2",
-	"description": "Open Source PaaS built on Node.JS - route-machine module",
-	"main": "index.js",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/MangoRaft/route-machine.git"
-	},
-	"dependencies": {
-		"eventemitter2": "0.4.x",
-		"http-proxy": "0.10.x",
-		"raft": "0.4.2",
-		"raft-logger": "0.0.3"
-	},
-	"bin": {
-		"routem": "./bin/route-server.js"
-	},
-	"homepage": "http://raft.mangoraft.com",
-	"author": "Tim <tim.dickinson@mangoraft.com>",
-	"license": "MIT"
+  "name": "route-machine",
+  "version": "0.1.4",
+  "description": "Open Source PaaS built on Node.JS - route-machine module",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MangoRaft/route-machine.git"
+  },
+  "dependencies": {
+    "eventemitter2": "0.4.x",
+    "http-proxy": "0.10.x",
+    "raft-logger": "0.1.x",
+    "ejs": "^1.0.0"
+  },
+  "bin": {
+    "routem": "./bin/route-server.js"
+  },
+  "homepage": "http://router.mangoraft.ca",
+  "author": "Tim <mangoraft@gmail.com>",
+  "license": "MIT"
 }
