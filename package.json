@@ -1,6 +1,6 @@
 {
   "name": "route-machine",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Open Source PaaS built on Node.JS - route-machine module",
   "main": "index.js",
   "repository": {
