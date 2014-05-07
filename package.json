@@ -1,0 +1,21 @@
+{
+	"name": "metrics-server",
+	"version": "0.0.1",
+	"author": "Tim <mangoraft@gmail.com>",
+	"description": "Metrics server",
+	"main": "./index",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MangoRaft/metrics-server.git"
+	},
+	"keywords": ["metrics", "server", "udp"],
+	"dependencies": {
+		"express": "^4.1.1",
+		"mongoose": "^3.8.8",
+		"punt": "^2.1.0",
+		"socket.io": "^0.9.16"
+	},
+	"bugs": {
+		"url": "https://github.com/MangoRaft/metrics-server/issues"
+	}
+}

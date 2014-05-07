@@ -1,0 +1,53 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+
+<div id="container" style="height: 400px; min-width: 310px"></div>
+
+<script>
+	var socket = io.connect('http://localhost:4003');
+	socket.on('connect', function() {
+		// Connected, let's sign-up for to receive messages for this room
+		socket.emit('room', 'random-token');
+
+		$(function() {
+
+			Highcharts.setOptions({
+				global : {
+					useUTC : false
+				}
+			});
+			$.getJSON('/metric/random-token?name=cpu', function(_data) {
+				var data = []
+				_data.cpu.forEach(function(item) {
+					data.push([item.time, item.metric])
+				});
+				$('#container').highcharts('StockChart', {
+					chart : {
+						events : {
+							load : function() {
+								// set up the updating of the chart each second
+								var series = this.series[0];
+								socket.on('metric', function(metric) {
+									if (metric.name == 'cpu')
+										series.addPoint([metric.time, metric.metric], true, true);
+								});
+							}
+						}
+					},
+					title : {
+						text : 'Live random data'
+					},
+					exporting : {
+						enabled : false
+					},
+					series : [{
+						name : 'Random data',
+						data : data
+					}]
+				});
+			});
+		});
+	}); 
+</script>
