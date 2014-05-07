@@ -16,13 +16,25 @@ var Schema = mongoose.Schema;
 var Mongoose = module.exports = {};
 
 Mongoose.hasStart = false;
-Mongoose.start = function() {
+Mongoose.start = function(options) {
 	if (Mongoose.hasStart) {
 		return;
 	}
 	Mongoose.hasStart = true;
 
-	var uri = 'mongodb://' + ('localhost' ) + ':' + ('27017') + ('/data/db');
+	var urlObj = {
+		protocol : 'mongodb://',
+		host : options.host || 'localhost',
+		port : options.port || '27017',
+		path : options.path || '/data/db'
+	};
+
+	if (options.username && options.password) {
+		urlObj.auth = options.username + ':' + options.password;
+	}
+
+	var uri = url.format(urlObj);
+
 
 	console.log('Mongodb connecting [' + uri + ']');
 	mongoose.connect(uri);
