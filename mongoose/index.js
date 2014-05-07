@@ -6,7 +6,6 @@ var events = require('events');
 var util = require('util');
 var path = require('path');
 var fs = require('fs');
-var url = require('url');
 
 //
 var mongoose = require('mongoose');
@@ -23,19 +22,13 @@ Mongoose.start = function(options) {
 	}
 	Mongoose.hasStart = true;
 
-	var urlObj = {
-		protocol : 'mongodb://',
-		host : options.host || 'localhost',
-		port : options.port || '27017',
-		path : options.path || '/data/db'
-	};
+	var uri = 'mongodb://';
 
 	if (options.username && options.password) {
-		urlObj.auth = options.username + ':' + options.password;
+		uri += options.username + ':' + options.password + '@';
 	}
 
-	var uri = url.format(urlObj);
-
+	uri += (options.host || 'localhost' ) + ':' + (options.port || '27017') + (options.path || '/data/db');
 
 	console.log('Mongodb connecting [' + uri + ']');
 	mongoose.connect(uri);
