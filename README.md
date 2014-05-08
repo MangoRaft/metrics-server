@@ -1,6 +1,6 @@
 # metrics-server
 
-metrics-server is a baisc metrics server and clinet. The client uses UDP to send metric to the server. The server stores all metric into a mongodb database.
+metrics-server is a basic metrics server and client. The client uses UDP to send metric to the server. The server stores all metric into a mongodb database.
 
 ## examples
 
