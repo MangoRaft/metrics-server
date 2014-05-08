@@ -151,8 +151,6 @@ Query the database to a certain time. Must include `from`.
 #### query `limit=500`
 Query the database and pull out 500.
 Defaults to 1000, MAX is 10000.
-#### query `to=2014-05-08T00:04:56.656Z`
-Query the database to a certain time. Must include `from`.
 
 ### GET `/metric/:token/count`
 Count the metrics in the DB.

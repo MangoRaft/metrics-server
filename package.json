@@ -2,7 +2,7 @@
 	"name": "metrics-server",
 	"version": "0.0.1",
 	"author": "Tim <mangoraft@gmail.com>",
-	"description": "Metrics server",
+	"description": "Basic metrics server and client.",
 	"main": "./index",
 	"repository": {
 		"type": "git",
