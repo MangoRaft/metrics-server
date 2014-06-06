@@ -13,6 +13,11 @@ var Metric = new Schema({
 		required : true,
 		'default' : Date.now
 	},
+	group : {
+		type : String,
+		required : true,
+		'default' : 'default'
+	},
 	metric : Number,
 	name : String,
 	token : String
@@ -20,4 +25,4 @@ var Metric = new Schema({
 
 module.exports = mongoose.model('Metric', Metric);
 
-module.exports.remove(function(){})
+//module.exports.remove(function(){})
