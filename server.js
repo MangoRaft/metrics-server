@@ -1,22 +1,23 @@
-var usage = require('usage');
+var mongodb = {
+	username : '',
+	password : '',
+	host : '',
+	port : 0,
+	path : '/'
+};
 
-var udpServer = require('./lib/udpserver').createServer({
+var udpServer = require('metrics-server').udpserver.createServer({
 	host : '127.0.0.1',
 	port : 4001,
-	mongodb : {
-		host : '127.0.0.1'
-	}
+	mongodb : mongodb
 });
 
-var webServer = require('./lib/webserver').createServer({
+var webServer = require('metrics-server').webserver.createServer({
 	udp : udpServer,
 	host : '127.0.0.1',
 	port : 4002,
-	mongodb : {
-		host : '127.0.0.1'
-	}
+	mongodb : mongodb
 });
-
 
 webServer.start();
 udpServer.start();

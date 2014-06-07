@@ -1,6 +1,13 @@
 var usage = require('usage');
 
 
+var mongodb = {
+	username : '',
+	password : '',
+	host : '',
+	port : 0,
+	path : '/'
+};
 var udpServer = require('./lib/udpserver').createServer({
 	host : '127.0.0.1',
 	port : 4001,
