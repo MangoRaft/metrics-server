@@ -1,7 +1,6 @@
 {
-<<<<<<< HEAD
 	"name": "metrics-server",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"author": "Tim <mangoraft@gmail.com>",
 	"description": "Basic metrics server and client.",
 	"main": "./index",
@@ -13,32 +12,9 @@
 	"dependencies": {
 		"express": "^4.1.1",
 		"mongoose": "^3.8.8",
-		"punt": "^2.1.0",
-		"socket.io": "^0.9.16"
+		"punt": "^2.1.0"
 	},
 	"bugs": {
 		"url": "https://github.com/MangoRaft/metrics-server/issues"
 	}
-=======
-  "name": "route-machine",
-  "version": "0.1.5",
-  "description": "Open Source PaaS built on Node.JS - route-machine module",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MangoRaft/route-machine.git"
-  },
-  "dependencies": {
-    "eventemitter2": "0.4.x",
-    "http-proxy": "0.10.x",
-    "raft-logger": "0.1.x",
-    "ejs": "^1.0.0"
-  },
-  "bin": {
-    "routem": "./bin/route-server.js"
-  },
-  "homepage": "http://router.mangoraft.ca",
-  "author": "Tim <mangoraft@gmail.com>",
-  "license": "MIT"
->>>>>>> 02f7d07cc4506d5d9e869772bf3ce334010dd4c4
 }
