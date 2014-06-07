@@ -6,7 +6,7 @@
 	"main": "./index",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/MangoRaft/metrics-server.git"
+		"url": "http://gitlab.mangoraft.ca/mangoraft/metrics-server.git"
 	},
 	"keywords": ["metrics", "server", "udp"],
 	"dependencies": {
@@ -15,6 +15,6 @@
 		"punt": "^2.1.0"
 	},
 	"bugs": {
-		"url": "https://github.com/MangoRaft/metrics-server/issues"
+		"url": "http://gitlab.mangoraft.ca/mangoraft/metrics-server/issues"
 	}
 }
