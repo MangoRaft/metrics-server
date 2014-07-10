@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="http://fastly.github.io/epoch/css/epoch.css">
+		<script src="http://fastly.github.io/epoch/js/jquery.js"></script>
+		<script src="http://fastly.github.io/epoch/js/d3.js"></script>
+		<script src="http://fastly.github.io/epoch/js/epoch.js"></script>
+	</head>
+	<body style="margin:0px;">
+		<div id="areaChart" class="epoch category20c" style="width: 100%; height: 200px;"></div>
+		<img src="http://localhost:4003/tracking_pixel.gif?token=demo.onmousemove" />
+	</body>
+
+	<script>
+		var push = new WebSocket("ws://127.0.0.1:4002/metrics");
+		var pull = new WebSocket("ws://127.0.0.1:4001/");
+		var chart = null;
+		pull.onmessage = function(event) {
+			var json = JSON.parse(event.data);
+			console.log(json)
+			chart.push(json.results.map(function(update) {
+				return {
+					time : update[0],
+					y : update[1]
+				};
+			}));
+		};
+
+		$(document).click(function(event) {
+			var data = ['demo.onmouseclick', 1, Date.now(), 'inc'];
+			console.log('onmouseclick')
+			push.send(data.join(' '));
+		});
+		$(document).mousemove(function(event) {
+			var data = ['demo.onmousemove', 1, Date.now(), 'inc'];
+			console.log('onmousemove')
+			push.send(data.join(' '));
+		});
+
+		$(function() {
+
+			$.getJSON('http://localhost:4001/metric/demo.onmousemove', function(onmousemove) {
+				$.getJSON('http://localhost:4001/metric/demo.onmouseclick', function(onmouseclick) {
+
+					chart = $('#areaChart').epoch({
+						type : 'time.line',
+						axes : ['right', 'bottom', 'left'],
+						data : [{
+							label : 'demo.onmouseclick',
+							values : onmouseclick.map(function(i) {
+								return {
+									time : i[0],
+									y : i[1]
+								};
+							})
+						}, {
+							label : 'demo.onmousemove',
+							values : onmousemove.map(function(i) {
+								return {
+									time : i[0],
+									y : i[1]
+								};
+							})
+						}],
+						pixelRatio : 1
+					});
+
+					pull.send(JSON.stringify({
+						event : 'start',
+						group : 'demo',
+						schema : 'demo.onmouseclick'
+					}));
+					pull.send(JSON.stringify({
+						event : 'start',
+						group : 'demo',
+						schema : 'demo.onmousemove'
+					}));
+
+				});
+			});
+
+		});
+	</script>
+</html>
