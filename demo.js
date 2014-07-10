@@ -1,26 +1,5 @@
 var usage = require('usage');
 
-
-var mongodb = {
-	username : '',
-	password : '',
-	host : '',
-	port : 0,
-	path : '/'
-};
-var udpServer = require('./lib/udpserver').createServer({
-	host : '127.0.0.1',
-	port : 4001,
-	mongodb : mongodb
-});
-
-var webServer = require('./lib/webserver').createServer({
-	udp : udpServer,
-	host : '127.0.0.1',
-	port : 4001,
-	mongodb : mongodb
-});
-
 var memory = require('./lib/metric').createMetric({
 	host : '127.0.0.1',
 	port : 4001
@@ -32,10 +11,9 @@ var cpu = require('./lib/metric').createMetric({
 });
 
 memory.interval = cpu.interval = false;
-memory.token = cpu.token = 'random-token';
 
-memory.name = 'memory';
-cpu.name = 'cpu';
+memory.token = 'demo.memory';
+cpu.token = 'demo.cpu';
 
 var pid = process.pid;
 setInterval(function() {
@@ -48,7 +26,5 @@ setInterval(function() {
 	});
 }, 1000);
 
-webServer.start();
-udpServer.start();
 memory.start();
 cpu.start();

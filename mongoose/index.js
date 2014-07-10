@@ -31,7 +31,11 @@ Mongoose.start = function(options) {
 	uri += (options.host || 'localhost' ) + ':' + (options.port || '27017') + (options.path || '/data/db');
 
 	console.log('Mongodb connecting [' + uri + ']');
-	mongoose.connect(uri);
+	mongoose.connect(uri, {
+		db : {
+			native_parser : true
+		}
+	});
 
 	mongoose.connection.once('open', function() {
 		console.log('Mongodb open [' + uri + ']');

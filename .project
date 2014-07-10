@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-<<<<<<< HEAD
 	<name>metrics-server</name>
-=======
-	<name>route-machine</name>
->>>>>>> 02f7d07cc4506d5d9e869772bf3ce334010dd4c4
 	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
 	</buildSpec>
 	<natures>
-<<<<<<< HEAD
-=======
 		<nature>com.aptana.projects.webnature</nature>
->>>>>>> 02f7d07cc4506d5d9e869772bf3ce334010dd4c4
 	</natures>
 </projectDescription>
