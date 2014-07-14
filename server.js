@@ -1,10 +1,15 @@
-var fork = require('child_process').fork;
+var child_process = require('child_process');
 var mongodb = {
 	host : 'localhost',
 	port : 27017,
 	path : '/data/db'
 };
 
+function fork(type) {
+	child_process.fork(__filename, [type]).once('exit', function() {
+		fork(type)
+	});
+}
 
 if (process.argv[2] == 'udp') {
 	require('./').udpserver.createServer({
@@ -31,8 +36,8 @@ if (process.argv[2] == 'udp') {
 		mongodb : mongodb
 	}).start();
 } else {
-	fork(__filename, ['udp']);
-	fork(__filename, ['web']);
-	fork(__filename, ['ws']);
-	fork(__filename, ['pixel']);
+	fork('udp');
+	fork('web');
+	fork('ws');
+	fork('pixel');
 }

@@ -18,11 +18,8 @@
     "express": "^4.1.1",
     "mongoose": "^3.8.8",
     "node-uuid": "^1.4.1",
-    "punt": "^2.1.0",
     "response-time": "^2.0.0",
-    "socket.io": "^1.0.6",
     "sugar": "^1.4.1",
-    "underscore": "^1.6.0",
     "ws": "^0.4.31"
   },
   "bugs": {

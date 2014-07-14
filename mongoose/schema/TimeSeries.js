@@ -217,13 +217,14 @@ TimeSeries.method('getSeconds', function(from, to) {
 	var fromSecond = from.getSeconds();
 
 	var self = this;
-
-	function getSeconds(seconds, minute) {
+	//console.log(from, to)
+	function getSeconds(seconds, start, minute) {
 		var arry = [];
 
 		for (var second = 0; second < seconds.length; second++) {
 			var d = seconds[second];
-			var timestamp = new Date(year, month, day, hour, minute, second);
+			var timestamp = new Date(year, month, day, hour, minute, second + start);
+			//console.log(timestamp)
 			arry.push([timestamp.getTime(), d]);
 
 		};
@@ -238,8 +239,9 @@ TimeSeries.method('getSeconds', function(from, to) {
 
 			var secondStart = minute == from.getMinutes() ? (from.getSeconds() + 2) : 2;
 			var secondEnd = minute == to.getMinutes() ? (to.getSeconds() + 2) : 62;
+			console.log('secondStart', secondStart, 'secondEnd', secondEnd);
 
-			var arry = getSeconds(this.values[minute].slice(secondStart, secondEnd), minute);
+			var arry = getSeconds(this.values[minute].slice(secondStart, secondEnd), secondStart - 2, minute);
 
 			data = data.concat(arry);
 
@@ -321,7 +323,7 @@ TimeSeries.static('seconds', function(request, callback) {
 				data.push(row);
 			});
 		});
-		console.log(data.length)
+		//console.log(data.length)
 		callback(null, data);
 	});
 });
@@ -411,20 +413,18 @@ TimeSeries.static('latest', function(request, callback) {
 
 	var self = this;
 
-	this.getData({
-		from : t
-	}, function(err, docs) {
+	var condition = {
 
-		if (err) {
-			return callback(err);
+	};
+	this.find(condition).limit(1).select('values').sort({
+		'hour' : -1
+	}).exec(function(error, docs) {
+
+		if (error) {
+			return callback(error);
 		}
 
-		if (docs.length) {
-			callback(null, [t.getTime(), docs[0].values[date.getMinutes()][date.getSeconds() + 2]]);
-		} else {
-			callback(null, [t.getTime(), 0]);
-		}
-
+		callback(null, [t.getTime(), docs[0].values[date.getMinutes()][date.getSeconds()]]);
 	});
 });
 
