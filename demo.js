@@ -16,8 +16,8 @@ memory.token = 'demo.memory';
 cpu.token = 'demo.cpu';
 
 var pid = process.pid;
-setInterval(function() {
 
+setInterval(function() {
 	usage.lookup(pid, {
 		keepHistory : true
 	}, function(err, result) {
