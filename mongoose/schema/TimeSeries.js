@@ -217,14 +217,12 @@ TimeSeries.method('getSeconds', function(from, to) {
 	var fromSecond = from.getSeconds();
 
 	var self = this;
-	//console.log(from, to)
 	function getSeconds(seconds, start, minute) {
 		var arry = [];
 
 		for (var second = 0; second < seconds.length; second++) {
 			var d = seconds[second];
 			var timestamp = new Date(year, month, day, hour, minute, second + start);
-			//console.log(timestamp)
 			arry.push([timestamp.getTime(), d]);
 
 		};
@@ -239,14 +237,13 @@ TimeSeries.method('getSeconds', function(from, to) {
 
 			var secondStart = minute == from.getMinutes() ? (from.getSeconds() + 2) : 2;
 			var secondEnd = minute == to.getMinutes() ? (to.getSeconds() + 2) : 62;
-			console.log('secondStart', secondStart, 'secondEnd', secondEnd);
 
 			var arry = getSeconds(this.values[minute].slice(secondStart, secondEnd), secondStart - 2, minute);
 
 			data = data.concat(arry);
 
 			if (secondEnd !== 62) {
-				return data
+				return data;
 			}
 		} else {
 			var arry = getSeconds(this.values[minute].slice(2), minute);
@@ -323,7 +320,6 @@ TimeSeries.static('seconds', function(request, callback) {
 				data.push(row);
 			});
 		});
-		//console.log(data.length)
 		callback(null, data);
 	});
 });
@@ -334,7 +330,7 @@ TimeSeries.static('minutes', function(request, callback) {
 	this.getData(request, function(err, docs) {
 
 		if (err) {
-			return callback(err)
+			return callback(err);
 		}
 		var data = [];
 
@@ -369,10 +365,10 @@ TimeSeries.static('days', function(request, callback) {
 	this.getData(request, function(err, docs) {
 
 		if (err) {
-			return callback(err)
+			return callback(err);
 		}
 
-		var days = {}
+		var days = {};
 
 		var data = [];
 
@@ -491,10 +487,10 @@ var TimeSeriesModel = function(collection, options) {
 	 */
 	function init(collection, options) {
 		if (mongoose.connection.modelNames().indexOf(collection) >= 0) {
-			model = connection.model(collection);
+			model = mongoose.connection.model(collection);
 
 		} else {
-			isNew = true
+			isNew = true;
 			model = mongoose.model(collection, TimeSeries);
 		}
 	}
