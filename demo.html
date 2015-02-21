@@ -6,11 +6,16 @@
 		<script src="http://fastly.github.io/epoch/js/d3.js"></script>
 		<script src="http://fastly.github.io/epoch/js/epoch.js"></script>
 	</head>
-	<body style="margin:0px;">
+	<body >
 		<div id="areaChart" class="epoch category20c" style="width: 100%; height: 200px;"></div>
 		<div id="memory" class="epoch category20c" style="width: 100%; height: 200px;"></div>
 		<div id="cpu" class="epoch category20c" style="width: 100%; height: 200px;"></div>
 		<img src="http://localhost:4003/tracking_pixel.gif?token=demo.onmousemove" />
+		<script src="http://code.highcharts.com/stock/highstock.js"></script>
+		<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+
+		<div id="cpu1" style="height: 400px; min-width: 310px"></div>
+		<div id="memory1" style="height: 400px; min-width: 310px"></div>
 	</body>
 
 	<script>
@@ -40,81 +45,129 @@
 
 			$.getJSON('http://localhost:4001/metric/demo.onmousemove?from=a minute ago', function(onmousemove) {
 				$.getJSON('http://localhost:4001/metric/demo.onmouseclick?from=a minute ago', function(onmouseclick) {
-					$.getJSON('http://localhost:4001/metric/demo.memory?from=a minute ago', function(memory) {
-						$.getJSON('http://localhost:4001/metric/demo.cpu?from=a minute ago', function(cpu) {
-							console.log(cpu.length)
 
-							chart['demo'] = $('#areaChart').epoch({
-								type : 'time.line',
-								axes : ['right', 'bottom', 'left'],
-								data : [{
-									label : 'demo.onmouseclick',
-									values : onmouseclick.map(function(i) {
-										return {
-											time : i[0],
-											y : i[1]
-										};
-									})
-								}, {
-									label : 'demo.onmousemove',
-									values : onmousemove.map(function(i) {
-										return {
-											time : i[0],
-											y : i[1]
-										};
-									})
-								}],
-								pixelRatio : 1
-							});
+					$.getJSON('http://localhost:4001/metric/docker.test.memory.cache?from=a minute ago', function(cachememory) {
+						$.getJSON('http://localhost:4001/metric/docker.test.memory.rss?from=a minute ago', function(rssmemory) {
+							$.getJSON('http://localhost:4001/metric/docker.test.memory.swap?from=a minute ago', function(swapmemory) {
 
-							pull.send(JSON.stringify({
-								event : 'start',
-								group : 'demo',
-								schema : 'demo.onmouseclick'
-							}));
-							pull.send(JSON.stringify({
-								event : 'start',
-								group : 'demo',
-								schema : 'demo.onmousemove'
-							}));
-							pull.send(JSON.stringify({
-								event : 'start',
-								group : 'memory',
-								schema : 'demo.memory'
-							}));
-							pull.send(JSON.stringify({
-								event : 'start',
-								group : 'cpu',
-								schema : 'demo.cpu'
-							}));
+								$.getJSON('http://localhost:4001/metric/docker.test.cpu.system?from=a minute ago', function(cpuSystem) {
+									$.getJSON('http://localhost:4001/metric/docker.test.cpu.user?from=a minute ago', function(cpuUser) {
+										console.log(cpu.length)
 
-							chart['memory'] = $('#memory').epoch({
-								type : 'time.line',
-								axes : ['right', 'bottom', 'left'],
-								data : [{
-									label : 'Memory',
-									values : memory.map(function(i) {
-										return {
-											time : i[0],
-											y : i[1]
-										};
-									})
-								}],
-								pixelRatio : 1
-							});
-							chart['cpu'] = $('#cpu').epoch({
-								type : 'time.line',
-								axes : ['right', 'bottom', 'left'],
-								data : [{
-									label : 'CPU',
-									values : cpu.map(function(i) {
-										return {
-											time : i[0],
-											y : i[1]
-										};
-									})
-								}],
-								pixelRatio : 1
+										chart['memory'] = $('#memory').epoch({
+											type : 'time.line',
+											axes : ['right', 'bottom', 'left'],
+											data : [{
+												label : 'Memory cache',
+												values : cachememory.map(function(i) {
+													return {
+														time : i[0],
+														y : i[1]
+													};
+												})
+											}, {
+												label : 'Memory rss',
+												values : rssmemory.map(function(i) {
+													return {
+														time : i[0],
+														y : i[1]
+													};
+												})
+											}, {
+												label : 'Memory swap',
+												values : swapmemory.map(function(i) {
+													return {
+														time : i[0],
+														y : i[1]
+													};
+												})
+											}],
+											pixelRatio : 1
+										});
+
+										chart['demo'] = $('#areaChart').epoch({
+											type : 'time.line',
+											axes : ['right', 'bottom', 'left'],
+											data : [{
+												label : 'demo.onmouseclick',
+												values : onmouseclick.map(function(i) {
+													return {
+														time : i[0],
+														y : i[1]
+													};
+												})
+											}, {
+												label : 'demo.onmousemove',
+												values : onmousemove.map(function(i) {
+													return {
+														time : i[0],
+														y : i[1]
+													};
+												})
+											}],
+											pixelRatio : 1
+										});
+
+										pull.send(JSON.stringify({
+											event : 'start',
+											group : 'demo',
+											schema : 'demo.onmouseclick'
+										}));
+										pull.send(JSON.stringify({
+											event : 'start',
+											group : 'demo',
+											schema : 'demo.onmousemove'
+										}));
+										pull.send(JSON.stringify({
+											event : 'start',
+											group : 'cpu',
+											schema : 'docker.test.cpu.user'
+										}));
+										pull.send(JSON.stringify({
+											event : 'start',
+											group : 'cpu',
+											schema : 'docker.test.cpu.system'
+										}));
+
+										pull.send(JSON.stringify({
+											event : 'start',
+											group : 'memory',
+											schema : 'docker.test.memory.cache'
+										}));
+										pull.send(JSON.stringify({
+											event : 'start',
+											group : 'memory',
+											schema : 'docker.test.memory.rss'
+										}));
+										pull.send(JSON.stringify({
+											event : 'start',
+											group : 'memory',
+											schema : 'docker.test.memory.swap'
+										}));
+										chart['cpu'] = $('#cpu').epoch({
+											type : 'time.line',
+											axes : ['right', 'bottom', 'left'],
+											data : [{
+												label : 'CPU USER',
+												values : cpuUser.map(function(i) {
+													return {
+														time : i[0],
+														y : i[1]
+													};
+												})
+											}, {
+												label : 'CPU SYSTEM',
+												values : cpuSystem.map(function(i) {
+													return {
+														time : i[0],
+														y : i[1]
+													};
+												})
+											}],
+											pixelRatio : 1
+										});
+									});
+								});
 							});
 						});
 					});
@@ -122,6 +175,114 @@
 				});
 			});
 
+		});
+		$(function() {
+			return;
+
+			$.getJSON('http://localhost:4001/metric/docker.test.cpu.system', function(cpuSystem) {
+				$.getJSON('http://localhost:4001/metric/docker.test.cpu.user', function(cpuUser) {
+					var seriesOptions = [];
+					seriesOptions.push({
+						name : 'cpuSystem',
+						data : cpuSystem
+					});
+					seriesOptions.push({
+						name : 'cpuUser',
+						data : cpuUser
+					});
+					$('#cpu1').highcharts('StockChart', {
+
+						rangeSelector : {
+							selected : 1,
+							buttons : [{
+								type : 'minute',
+								count : 1,
+								text : '1m'
+							}, {
+								type : 'minute',
+								count : 10,
+								text : '10m'
+							}, {
+								type : 'minute',
+								count : 150,
+								text : '150m'
+							}, {
+								type : 'all',
+								text : 'All'
+							}]
+						},
+
+						yAxis : {
+							labels : {
+
+							},
+							plotLines : [{
+								value : 0,
+								width : 2,
+								color : 'silver'
+							}]
+						},
+
+						series : seriesOptions
+					});
+
+				});
+			});
+			$.getJSON('http://localhost:4001/metric/docker.test.memory.cache', function(cache) {
+				$.getJSON('http://localhost:4001/metric/docker.test.memory.rss', function(rss) {
+					$.getJSON('http://localhost:4001/metric/docker.test.memory.swap', function(swap) {
+						var seriesOptions = [];
+						seriesOptions.push({
+							name : 'cache',
+							data : cache
+						});
+						seriesOptions.push({
+							name : 'rss',
+							data : rss
+						});
+						seriesOptions.push({
+							name : 'swap',
+							data : swap
+						});
+						$('#memory1').highcharts('StockChart', {
+
+							rangeSelector : {
+								selected : 1,
+								buttons : [{
+									type : 'minute',
+									count : 1,
+									text : '1m'
+								}, {
+									type : 'minute',
+									count : 10,
+									text : '10m'
+								}, {
+									type : 'minute',
+									count : 150,
+									text : '150m'
+								}, {
+									type : 'all',
+									text : 'All'
+								}]
+							},
+
+							yAxis : {
+								labels : {
+
+								},
+								plotLines : [{
+									value : 0,
+									width : 2,
+									color : 'silver'
+								}]
+							},
+
+							series : seriesOptions
+						});
+
+					});
+				});
+			});
 		});
 	</script>
 </html>

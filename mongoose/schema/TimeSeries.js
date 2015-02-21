@@ -5,6 +5,7 @@
  */
 require('sugar');
 var mongoose = require('mongoose');
+var schedule = require('node-schedule');
 var Schema = mongoose.Schema;
 var Mixed = mongoose.Schema.Types.Mixed;
 
@@ -93,7 +94,13 @@ var TimeSeries = new Schema({
 	},
 	values : []
 });
-
+TimeSeries.pre('save', function(next) {
+	console.log(this.isNew);
+	if (this.isNew) {
+		
+	}
+	next();
+});
 TimeSeries.static('push', function(timestamp, value, metadata, cb) {
 
 	var hour = roundHour(timestamp);
@@ -232,7 +239,6 @@ TimeSeries.method('getSeconds', function(from, to) {
 	var minuteStart = roundHour(from).getTime() == roundHour(self.hour).getTime() ? fromMinute : 0;
 
 	for (var minute = minuteStart; minute < this.values.length; minute++) {
-
 		if (roundHour(to).getTime() == roundHour(self.hour).getTime()) {
 
 			var secondStart = minute == from.getMinutes() ? (from.getSeconds() + 2) : 2;
@@ -246,7 +252,7 @@ TimeSeries.method('getSeconds', function(from, to) {
 				return data;
 			}
 		} else {
-			var arry = getSeconds(this.values[minute].slice(2), minute);
+			var arry = getSeconds(this.values[minute].slice(2), 2, minute);
 			data = data.concat(arry);
 		}
 	};
@@ -273,14 +279,14 @@ TimeSeries.method('getMinutes', function(from, to, type) {
 		var num_samples = this.values[minute][0];
 		var timestamp = new Date(year, month, day, hour, minute).getTime();
 		switch (type) {
-			case "avg":
+		case "avg":
 
-				var d = total_samples / num_samples;
-				data.push([timestamp, d]);
-				break;
-			case "sum":
-			default:
-				data.push([timestamp, total_samples]);
+			var d = total_samples / num_samples;
+			data.push([timestamp, d]);
+			break;
+		case "sum":
+		default:
+			data.push([timestamp, total_samples]);
 		}
 
 		if (roundHour(to).getTime() == roundHour(self.hour).getTime()) {
@@ -296,12 +302,12 @@ TimeSeries.method('getMinutes', function(from, to, type) {
 
 TimeSeries.method('getHours', function(type) {
 	switch (type) {
-		case "avg":
-			return [this.hour.getTime(), this.total_samples / this.num_samples];
-			break;
-		case "sum":
-		default:
-			return [this.hour.getTime(), this.total_samples];
+	case "avg":
+		return [this.hour.getTime(), this.total_samples / this.num_samples];
+		break;
+	case "sum":
+	default:
+		return [this.hour.getTime(), this.total_samples];
 	}
 });
 
@@ -389,13 +395,13 @@ TimeSeries.static('days', function(request, callback) {
 
 		Object.keys(days).forEach(function(day) {
 			switch (request.type) {
-				case "avg":
-					var d = days[day].total_samples / days[day].num_samples;
-					data.push([days[day].day.getTime(), d instanceof Number ? d : 0]);
-					break;
-				case "sum":
-				default:
-					data.push([days[day].day.getTime(), days[day].total_samples]);
+			case "avg":
+				var d = days[day].total_samples / days[day].num_samples;
+				data.push([days[day].day.getTime(), d instanceof Number ? d : 0]);
+				break;
+			case "sum":
+			default:
+				data.push([days[day].day.getTime(), days[day].total_samples]);
 			}
 		});
 		callback(null, data);
@@ -405,7 +411,7 @@ TimeSeries.static('days', function(request, callback) {
 TimeSeries.static('latest', function(request, callback) {
 
 	var date = new Date();
-	var t = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds() - 2);
+	var t = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds() - 3);
 
 	var self = this;
 
@@ -421,6 +427,7 @@ TimeSeries.static('latest', function(request, callback) {
 		}
 
 		callback(null, [t.getTime(), docs[0].values[date.getMinutes()][date.getSeconds()]]);
+
 	});
 });
 
@@ -475,7 +482,8 @@ TimeSeries.static('min', function(request, callback) {
 
 var TimeSeriesModel = function(collection, options) {
 
-	var model, schema;
+	var model,
+	    schema;
 	var isNew = false;
 
 	/**
