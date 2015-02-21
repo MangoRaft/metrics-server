@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 var program = require('commander');
 var cluster = require('cluster');
 
@@ -219,6 +218,7 @@ server.description('View logs in teal-time.');
 
 server.option('-a, --addr [HOST]', 'Bind to HOST address (default: 127.0.0.1)', '127.0.0.1');
 server.option('-p, --port [PORT]', 'Use PORT (default: 4001)', 4001);
+server.option('-x, --port-udp [PORT-UDP]', 'Use PORT (default: 4002)', 4004);
 server.option('-x, --port-ws [PORT-WS]', 'Use PORT (default: 4002)', 4002);
 server.option('-z, --port-pixel [PORT-PIXEL]', 'Use PORT (default: 4003)', 4003);
 server.option('-A, --mongo-addr [HOST]', 'Connect to mongodb HOST address (default: 127.0.0.1)', '127.0.0.1');
@@ -256,7 +256,7 @@ server.action(function(options) {
 		if (options.udp) {
 			udpServer({
 				host : options.addr,
-				port : options.port,
+				port : options.portUdp,
 				mongodb : mongodb
 			});
 		}
@@ -291,3 +291,4 @@ server.action(function(options) {
 });
 
 program.parse(process.argv);
+if (!program.args.length) program.help();
