@@ -97,7 +97,7 @@ var TimeSeries = new Schema({
 TimeSeries.pre('save', function(next) {
 	console.log(this.isNew);
 	if (this.isNew) {
-		
+
 	}
 	next();
 });
@@ -205,6 +205,7 @@ TimeSeries.static('getData', function(request, callback) {
 			console.log(error);
 			callback(error);
 		} else {
+			console.log(docs);
 			callback(null, docs);
 		}
 	});
@@ -425,8 +426,24 @@ TimeSeries.static('latest', function(request, callback) {
 		if (error) {
 			return callback(error);
 		}
+		if (docs.length) {
+			var doc = docs[0];
+			switch (request.type) {
+			case "avg":
+				var d = doc.values[date.getMinutes()][date.getSeconds()] / (doc.values[date.getMinutes()][0] / date.getSeconds());
 
-		callback(null, [t.getTime(), docs[0].values[date.getMinutes()][date.getSeconds()]]);
+				console.log(doc.values[date.getMinutes()][date.getSeconds()] / doc.values[date.getMinutes()][0])
+
+				callback(null, [t.getTime(), d instanceof Number ? d : 0]);
+				break;
+			case "sum":
+			default:
+				callback(null, [t.getTime(), doc.values[date.getMinutes()][date.getSeconds()]]);
+			}
+
+		} else {
+			callback(new Error('No docs found'));
+		}
 
 	});
 });
